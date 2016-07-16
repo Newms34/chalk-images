@@ -58,7 +58,7 @@ gp('river.jpg', function(err, px) {
     for (var n = 0; n < chunkArr.length; n++) {
         if (!isNaN(chunkArr[n].r) && !isNaN(chunkArr[n].g) && !isNaN(chunkArr[n].b)) {
             var hsl = rgbToHsl(chunkArr[n].r, chunkArr[n].g, chunkArr[n].b);
-            console.log('HSL:',hsl)
+            console.log('HSL:', hsl)
             if (chunkArr[n].r < 30 && chunkArr[n].g < 30 && chunkArr[n].b < 30) {
                 //black
                 finalColArr.push('bgBlack')
@@ -66,17 +66,17 @@ gp('river.jpg', function(err, px) {
                 //white
                 finalColArr.push('bgWhite')
             } else if (hsl[1] > 0.1) {
-                if ((hsl[0]*255)<30) {
+                if ((hsl[0] * 255) < 30) {
                     finalColArr.push('bgRed')
-                }else if((hsl[0]*255)<90){
+                } else if ((hsl[0] * 255) < 90) {
                     finalColArr.push('bgYellow')
-                }else if((hsl[0]*255)<150){
+                } else if ((hsl[0] * 255) < 150) {
                     finalColArr.push('bgGreen')
-                }else if((hsl[0]*255)<210){
+                } else if ((hsl[0] * 255) < 210) {
                     finalColArr.push('bgCyan')
-                }else if((hsl[0]*255)<270){
+                } else if ((hsl[0] * 255) < 270) {
                     finalColArr.push('bgBlue')
-                }else{
+                } else {
                     // finalColArr.push('bgMagenta')
                 }
             }
@@ -84,13 +84,13 @@ gp('river.jpg', function(err, px) {
     }
     console.log(finalColArr);
     var str = '';
-    for (var q=0;q<finalColArr.length;q++){
-    	theFn = chalk[finalColArr[q]];
-    	console.log('len',str.length%imDiv,imDiv,str.length)
-    	str+=theFn(' ');
-    	if (q%80==0){
-    		str+='||'
-    	}
+    for (var q = 0; q < finalColArr.length; q++) {
+        theFn = chalk[finalColArr[q]];
+        console.log('len', str.length % imDiv, imDiv, str.length)
+        str += theFn(' ');
+        if (q % 80 == 0) {
+            str += '||'
+        }
     }
     console.log(str)
 });
