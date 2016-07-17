@@ -3,33 +3,51 @@ var chalk = require('chalk'),
     imSz = require('image-size');
 
 var drawImg = function(im_url) {
+        var animate = false;
+        if (im_url.indexOf('.gif') != -1) {
+            animate = true;
+        }
         try {
             var dims = imSz(im_url);
-        }
-        catch(e){
-            console.log(chalk.red('ERR:'),'Could not load image',chalk.magenta(im_url),'.')
+        } catch (e) {
+            console.log(chalk.red('ERR:'), 'Could not load image', chalk.magenta(im_url), '.')
             return false;
         }
         gp(im_url, function(err, px) {
-            var imDiv = Math.ceil(dims.width / (process.stdout.columns*.5)); //get the number of pixels wide each pixel 'chunk' will be
+            var imDiv = Math.ceil(dims.width / (process.stdout.columns * .5)); //get the number of pixels wide each pixel 'chunk' will be
             if (err) {
                 console.log(chalk.red('OH NO!'), 'Error:', err);
-                px.get(x, y, 0);
                 return;
             }
             var rgbArr = [];
-            for (var y = 0; y < dims.height; y++) {
-                var row = [];
-                for (var x = 0; x < dims.width; x++) {
-                    var newRGB = {
-                        red: px.get(x, y, 0),
-                        green: px.get(x, y, 1),
-                        blue: px.get(x, y, 2)
-                    };
-                    row.push(newRGB);
+            if (animate) {
+                for (var y = 0; y < dims.height; y++) {
+                    var row = [];
+                    for (var x = 0; x < dims.width; x++) {
+                        var newRGB = {
+                            red: px.get(x, y, 1),
+                            green: px.get(x, y, 2),
+                            blue: px.get(x, y, 3)
+                        };
+                        row.push(newRGB);
+                    }
+                    rgbArr.push(row);
                 }
-                rgbArr.push(row);
+            } else {
+                for (var y = 0; y < dims.height; y++) {
+                    var row = [];
+                    for (var x = 0; x < dims.width; x++) {
+                        var newRGB = {
+                            red: px.get(x, y, 0),
+                            green: px.get(x, y, 1),
+                            blue: px.get(x, y, 2)
+                        };
+                        row.push(newRGB);
+                    }
+                    rgbArr.push(row);
+                }
             }
+
             //we now have an array of all pixel rgb vals, with each pixel ALSO assigned its x and y coords
             var chunkArr = [];
             var finalColArr = []; //to hold the final colors for chalk
@@ -116,11 +134,25 @@ var drawImg = function(im_url) {
                 var pxTxt = finalColArr[q].indexOf('bg') != -1 ? ' ' : '#';
                 str += theFn(pxTxt) + theFn(pxTxt);
             }
-            console.log(str)
+            if (!animate) {
+                //not an animated gif!
+                console.log(str)
+            }
         });
     }
     // drawImg('./test/rivsm.jpg')
     //http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion Thanks!
+
+var testFn = function() {
+    gp('./test/sw.gif', function(err, px) {
+        if (err) {
+            console.log("ERR!", err)
+            return;
+        }
+        console.log(px.get(0, 0, 1))
+    })
+}
+
 function rgbToHsl(r, g, b) {
     r /= 255, g /= 255, b /= 255;
     var max = Math.max(r, g, b),
@@ -148,4 +180,4 @@ function rgbToHsl(r, g, b) {
 
     return [h, s, l];
 }
-module.exports = { drawImg: drawImg };
+module.exports = { drawImg: drawImg, testFn: testFn };
