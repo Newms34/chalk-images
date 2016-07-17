@@ -7,7 +7,7 @@ Convert your images into console-code with Chalk!
 
 #Examples:
 
-![Marlon Brando in The God Father](./examples/example1.jpg)
+![Marlon Brando in The God Father](/examples/example1.jpg)
 ----
 ![Jurassic World](./examples/example4.png)
 ----
