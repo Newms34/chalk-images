@@ -1,3 +1,3 @@
 var di = require('../');
-console.log(di.drawImg);
-di.drawImg('testimg.jpg')
+
+di.drawImg('test.jpeg',16);
