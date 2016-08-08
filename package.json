@@ -1,6 +1,6 @@
 {
   "name": "chalk-image",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Convert images (currently jpeg,png) into chalk.js code",
   "main": "index.js",
   "scripts": {
