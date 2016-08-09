@@ -13,7 +13,7 @@ Convert your images into console-code with Chalk!
 ###Output:
 ![Kurt Cobain](http://i.imgur.com/QT4lVBA.jpg)
 ----
-###Full Color Output
+###Full Color Output (OSX and/or POSIX only)
 ![Kurt Cobain](http://i.imgur.com/PpRso1n.png)
 
 
@@ -30,8 +30,8 @@ Or draw in 16M-color mode!: `ci.drawImg('path/to/my/img.jpg',16)`
 Works best with BMPs and JPEGs!
 
 ##Issues:
- 1. Does not currently seem to work with animated GIFs. This is partially because the time-component of gifs seems to not really be easily parsable.
- 2. The full-color mode is experimental. Don't be surprised if it doesn't work on your console!
+ 1. Does not currently seem to work with animated GIFs. This is partially because the time-component of gifs seems to not really be easily parsable. It's also partially because the amount of data for animated gifs is *huge* (a 100x100, 3 second gif is 2.16M separate points of data)!
+ 2. The full-color mode only works on OSX (POSIX?) systems. Windows command prompt only supports low-color mode. Attempting to draw in 256 or 16m color mode in Windows will just default to low-color mode.
 
 ##Credits:
  - Written by me, [David Newman](https://github.com/Newms34).
