@@ -8,10 +8,13 @@ var chalk = require('chalk'),
 var drawImg = function(im_url, colMode = null, exportMe = false) {
     //if mode is blank or not one of the defined options, render using color 'names' (i.e., red, green, yellow, etc.). 
     //if 256, render using 256 color mode. if 16 or 16m, use 16million color mode
-    if (colMode===true){
+    if(exportMe==='true'){
+        exportMe=true;
+    }
+    if (colMode===true||colMode=='true'){
         //in case user specifies export, but not color mode
         exportMe=true;
-        colMode=nul;
+        colMode=null;
     }
     try {
         var dims = imSz(im_url);
@@ -147,11 +150,11 @@ var drawImg = function(im_url, colMode = null, exportMe = false) {
             }
         }
         // console.log(def.resolve)
-        console.log(str.length)
+        // console.log(str.length)
         if (exportMe) {
             def.resolve(str);
         }else{
-            return str;
+            console.log(str);
         }
     });
     if (exportMe) {
