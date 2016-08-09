@@ -1,18 +1,37 @@
 var chalk = require('chalk'),
     gp = require('get-pixels'),
     imSz = require('image-size'),
-    fullCol = require('./colStuff.js');
+    fullCol = require('./colStuff.js'),
+    sc = require('./node_modules/chalk/node_modules/supports-color'),
+    Q = require('q')
+os = require('os');
 
-var drawImg = function(im_url, colMode) {
+var drawImg = function(im_url, colMode, exportMe) {
     //if mode is blank or not one of the defined options, render using color 'names' (i.e., red, green, yellow, etc.). 
     //if 256, render using 256 color mode. if 16 or 16m, use 16million color mode
+    console.log(im_url, colMode, exportMe)
+    if (exportMe === 'true') {
+        exportMe = true;
+    }
+    if (colMode === true || colMode == 'true') {
+        //in case user specifies export, but not color mode
+        exportMe = true;
+        colMode = null;
+    }
     try {
         var dims = imSz(im_url);
     } catch (e) {
         console.log(chalk.red('ERR:'), 'Could not load image', chalk.magenta(im_url), '.')
         return false;
     }
+    if (os.platform() == 'win32') {
+        console.log(chalk.red('WARNING:'), 'Your system does not support high-color mode!');
+        colMode = null;
+    }
     var limitCols = (colMode != '16' && colMode != '16m' && colMode != '256');
+    if (exportMe) {
+        var def = Q.defer();
+    }
     gp(im_url, function(err, px) {
         var imDiv = Math.ceil(dims.width / (process.stdout.columns * .5)); //get the number of pixels wide each pixel 'chunk' will be
         if (err) {
@@ -33,8 +52,6 @@ var drawImg = function(im_url, colMode) {
             }
             rgbArr.push(row);
         }
-
-
         //we now have an array of all pixel rgb vals, with each pixel ALSO assigned its x and y coords
         var chunkArr = [];
         var finalColArr = []; //to hold the final colors for chalk
@@ -116,9 +133,9 @@ var drawImg = function(im_url, colMode) {
                         finalColArr.push('grey');
                     }
                 } else if (colMode == '256') {
-                    str += fullCol.bgColor.ansi256.hsl((hsl[0] * 360), (hsl[1] * 100), (hsl[2] * 100)) + '  ' + fullCol.bgColor.close;
-                } else if (colMode == '16' || colMode=='16m'){
-                    str += fullCol.bgColor.ansi16m.hsl((hsl[0] * 360), (hsl[1] * 100), (hsl[2] * 100)) + '  ' + fullCol.bgColor.close;
+                    str += fullCol.bgColor.ansi256.rgb(parseInt(chunkArr[n].r), parseInt(chunkArr[n].g), parseInt(chunkArr[n].b)) + '  ' + fullCol.bgColor.close;
+                } else if (colMode == '16' || colMode == '16m') { 
+                    str += fullCol.bgColor.ansi16m.rgb(parseInt(chunkArr[n].r), parseInt(chunkArr[n].g), parseInt(chunkArr[n].b)) + '  ' + fullCol.bgColor.close;
                 }
             }
         }
@@ -129,21 +146,18 @@ var drawImg = function(im_url, colMode) {
                 str += theFn(pxTxt) + theFn(pxTxt);
             }
         }
-        console.log(str);
+        if (exportMe) {
+            def.resolve(str);
+        } else {
+            console.log(str);
+        }
     });
+    if (exportMe) {
+        return def.promise;
+    }
 
 };
 //http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion Thanks!
-
-var testFn = function() {
-    gp('./test/sw.gif', function(err, px) {
-        if (err) {
-            console.log("ERR!", err)
-            return;
-        }
-        console.log(px.get(0, 0, 1))
-    })
-}
 
 function rgbToHsl(r, g, b) {
     r /= 255, g /= 255, b /= 255;
@@ -172,4 +186,4 @@ function rgbToHsl(r, g, b) {
 
     return [h, s, l];
 }
-module.exports = { drawImg: drawImg, testFn: testFn };
+module.exports = { drawImg: drawImg };

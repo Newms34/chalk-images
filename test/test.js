@@ -1,3 +1,14 @@
-var di = require('../');
+var di = require('../'),
+    q = require('../node_modules/q');
+console.log('ARGS',process.argv)
+if (process.argv[3] === true || process.argv[2] === true || process.argv[3] === 'true' || process.argv[2] === 'true') {
+    var p = di.drawImg('test.jpeg', process.argv[2], process.argv[3]);
+    p.done(function(s) {
+        console.log('\n', s)
+    })
+}else{
+	var col = process.argv[2]=='16'||process.argv[2]=='16m'||process.argv[2]=='256'?process.argv[2]:null;
+	console.log('Drawing without promise')
+	di.drawImg('test.jpeg',col);
 
-di.drawImg('test.jpeg',process.argv[2]);
+}
