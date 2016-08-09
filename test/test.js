@@ -1,7 +1,12 @@
 var di = require('../'),
-q = require('../node_modules/q');
+    q = require('../node_modules/q');
 
-var p = di.drawImg('test.jpeg',256,true);
-console.log('promise from drawImg',p.done(function(s){
-	console.log('\n',s)
-}))
+if (process.argv[3] === true || process.argv[2] === true) {
+    var p = di.drawImg('test.jpeg', process.argv[2], process.argv[3]);
+    p.done(function(s) {
+        console.log('\n', s)
+    })
+}else{
+	var col = process.argv[2]=='16'||process.argv[2]=='16m'||process.argv[2]=='256'?process.argv[2]:null;
+	di.drawImg('test.jpeg',col)
+}
