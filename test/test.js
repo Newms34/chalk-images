@@ -1,3 +1,3 @@
 var di = require('../');
 
-di.drawImg('test.jpeg',16);
+di.drawImg('test.jpeg',process.argv[2]);
