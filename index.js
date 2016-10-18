@@ -3,18 +3,20 @@ var chalk = require('chalk'),
     imSz = require('image-size'),
     fullCol = require('./colStuff.js'),
     sc = require('supports-color'),
-    Q = require('q');
+    Q = require('q'),
+    os = require('os');
 
-var drawImg = function(im_url, colMode = null, exportMe = false) {
+var drawImg = function(im_url, colMode, exportMe) {
     //if mode is blank or not one of the defined options, render using color 'names' (i.e., red, green, yellow, etc.). 
     //if 256, render using 256 color mode. if 16 or 16m, use 16million color mode
-    if(exportMe==='true'){
-        exportMe=true;
+    console.log(im_url, colMode, exportMe)
+    if (exportMe === 'true') {
+        exportMe = true;
     }
-    if (colMode===true||colMode=='true'){
+    if (colMode === true || colMode == 'true') {
         //in case user specifies export, but not color mode
-        exportMe=true;
-        colMode=null;
+        exportMe = true;
+        colMode = null;
     }
     try {
         var dims = imSz(im_url);
@@ -22,8 +24,8 @@ var drawImg = function(im_url, colMode = null, exportMe = false) {
         console.log(chalk.red('ERR:'), 'Could not load image', chalk.magenta(im_url), '.')
         return false;
     }
-    if (((colMode == '16' || colMode == '16m') && !sc.has16m) || (colMode == '256' && !sc.has256)) {
-        console.log(chalk.red('WARNING:'), 'Your console (probably Windows) does not support full-color! Defaulting to low-color mode.')
+    if (os.platform() == 'win32') {
+        console.log(chalk.red('WARNING:'), 'Your system does not support high-color mode!');
         colMode = null;
     }
     var limitCols = (colMode != '16' && colMode != '16m' && colMode != '256');
@@ -50,8 +52,6 @@ var drawImg = function(im_url, colMode = null, exportMe = false) {
             }
             rgbArr.push(row);
         }
-
-
         //we now have an array of all pixel rgb vals, with each pixel ALSO assigned its x and y coords
         var chunkArr = [];
         var finalColArr = []; //to hold the final colors for chalk
@@ -133,12 +133,9 @@ var drawImg = function(im_url, colMode = null, exportMe = false) {
                         finalColArr.push('grey');
                     }
                 } else if (colMode == '256') {
-                    // chunkArr[n].r
-                    // str += fullCol.bgColor.ansi256.hsl((hsl[0] * 360), (hsl[1] * 100), (hsl[2] * 100)) + '  ' + fullCol.bgColor.close;
-                    str += fullCol.bgColor.ansi256.rgb(chunkArr[n].r, chunkArr[n].g, chunkArr[n].b) + '  ' + fullCol.bgColor.close;
+                    str += fullCol.bgColor.ansi256.rgb(parseInt(chunkArr[n].r), parseInt(chunkArr[n].g), parseInt(chunkArr[n].b)) + '  ' + fullCol.bgColor.close;
                 } else if (colMode == '16' || colMode == '16m') {
-                    // str += fullCol.bgColor.ansi16m.hsl((hsl[0] * 360), (hsl[1] * 100), (hsl[2] * 100)) + '  ' + fullCol.bgColor.close;
-                    str += fullCol.bgColor.ansi16m.rgb(chunkArr[n].r, chunkArr[n].g, chunkArr[n].b) + '  ' + fullCol.bgColor.close;
+                    str += fullCol.bgColor.ansi16m.rgb(parseInt(chunkArr[n].r), parseInt(chunkArr[n].g), parseInt(chunkArr[n].b)) + '  ' + fullCol.bgColor.close;
                 }
             }
         }
@@ -151,7 +148,7 @@ var drawImg = function(im_url, colMode = null, exportMe = false) {
         }
         if (exportMe) {
             def.resolve(str);
-        }else{
+        } else {
             console.log(str);
         }
     });
