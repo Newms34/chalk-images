@@ -2,7 +2,7 @@ var chalk = require('chalk'),
     gp = require('get-pixels'),
     imSz = require('image-size'),
     fullCol = require('./colStuff.js'),
-    sc = require('./node_modules/chalk/node_modules/supports-color'),
+    sc = require('supports-color'),
     Q = require('q');
 
 var drawImg = function(im_url, colMode = null, exportMe = false) {
@@ -149,8 +149,6 @@ var drawImg = function(im_url, colMode = null, exportMe = false) {
                 str += theFn(pxTxt) + theFn(pxTxt);
             }
         }
-        // console.log(def.resolve)
-        // console.log(str.length)
         if (exportMe) {
             def.resolve(str);
         }else{
