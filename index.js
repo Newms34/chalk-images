@@ -2,9 +2,9 @@ var chalk = require('chalk'),
     gp = require('get-pixels'),
     imSz = require('image-size'),
     fullCol = require('./colStuff.js'),
-    sc = require('supports-color'),
-    Q = require('q'),
-    os = require('os');
+    // sc = require('supports-color'),
+    Q = require('q');
+    // os = require('os');
 
 var drawImg = function(im_url, colMode, exportMe) {
     //if mode is blank or not one of the defined options, render using color 'names' (i.e., red, green, yellow, etc.). 
@@ -22,12 +22,13 @@ var drawImg = function(im_url, colMode, exportMe) {
         var dims = imSz(im_url);
     } catch (e) {
         console.log(chalk.red('ERR:'), 'Could not load image', chalk.magenta(im_url), '.')
+        console.log(e)
         return false;
     }
-    if (os.platform() == 'win32') {
-        console.log(chalk.red('WARNING:'), 'Your system does not support high-color mode!');
-        colMode = null;
-    }
+    // if (os.platform() == 'win32') {
+    //     console.log(chalk.red('WARNING:'), 'Your system does not support high-color mode!');
+    //     colMode = null;
+    // }
     var limitCols = (colMode != '16' && colMode != '16m' && colMode != '256');
     if (exportMe) {
         var def = Q.defer();
