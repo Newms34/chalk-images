@@ -33,6 +33,7 @@ There are a number of options available:
  `ci.drawImg('path/to/my/img.jpg',16);`
 
  This does now works in windows. Happy!
+ 
  2. You can ask the drawImg function to return a promise, which you can then use to export the 'image' to whatever:
 
  `var myProm = ci.drawImg('path/to/my/img.jpg',16);`
