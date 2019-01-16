@@ -32,8 +32,8 @@ Works best with BMPs and JPEGs!
 
 ---
 ### Options:
-There are a number of options available. These are passed to `drawImg()` as a secondary optional options object. The properties of this object are as follows:
- - **exportMe**: Default false. If true, `drawImg()` will return a `.then`able promise. Otherwise, `drawImg()` will simply draw the image when it's finished mathing it.
+There are a number of options available. These are passed to `.drawImg()` as a secondary optional options object. The properties of this object are as follows:
+ - **exportMe**: Default false. If true, `.drawImg()` will return a `.then`able promise. Otherwise, `.drawImg()` will simply draw the image when it's finished mathing it. *NOTE:* Even without a promise, `.drawImg()`, will *not* simply return the image string. This is because the drawing process involves some asynchronous wizardry.
  - **verbose**: Default false. If true, you'll get some extra info about the image (and console) dimensions. Useful if you wanna debug stuff.
  - **colMode**: Default no value. If set to `16` or `16m`, will draw in 16-million color mode. If set to `256`, will draw in 256-color mode. Otherwise, It'll draw in good-old-fashioned 16 color mode. 
 
